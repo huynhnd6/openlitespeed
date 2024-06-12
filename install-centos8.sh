@@ -69,7 +69,7 @@ sudo ln -s /usr/local/lsws/lsphp${php_version}/bin/php /usr/bin/php
 # Config OpenLiteSpeed
 sudo wget -O /usr/local/lsws/conf/templates/www.conf https://raw.githubusercontent.com/huynhnd6/openlitespeed/main/conf/templates/www.conf
 sudo wget -O /usr/local/lsws/conf/httpd_config.conf https://raw.githubusercontent.com/huynhnd6/openlitespeed/main/conf/httpd_config.conf
-sudo sed -i "s|^\( *path *\).*$|\1$SERVER_ROOT/lsphp${php_version}/bin/lsphp|" /usr/local/lsws/conf/httpd_config.conf
+sudo sed -i 's/lsphp81/lsphp${php_version}/g' /usr/local/lsws/conf/httpd_config.conf
 # change pass admin
 ENCRYPT_PASS=`/usr/local/lsws/admin/fcgi-bin/admin_php -q /usr/local/lsws/admin/misc/htpasswd.php $ls_pass`
 echo "$ls_user:$ENCRYPT_PASS" > /usr/local/lsws/admin/conf/htpasswd 
