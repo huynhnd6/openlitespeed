@@ -1,37 +1,38 @@
 #!/bin/bash
 
-# Hỏi người dùng chọn phiên bản PHP
-php_version=""
-while [ -z "$php_version" ]; do
-    echo "Please choose the PHP version (for example: 80 for PHP 8.0, 81 for PHP 8.1):"
-    read php_version
+# php version supported
+valid_php_values=("53" "54" "55" "56" "70" "71" "72" "73" "74" "80" "81" "82")
+# default php version
+php_version="81"
+ls_user="admin"
+ls_pass="password"
 
-    if [ -z "$php_version" ]; then
-        echo "You haven't entered the PHP version. Please enter again."
-    fi
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        -php=*|--php=*)
+            php_version="${1#*=}"
+            shift
+            ;;
+        -user=*|--user=*)
+            ls_user="${1#*=}"
+            shift
+            ;;
+        -pass=*|--pass=*)
+            ls_pass="${1#*=}"
+            shift
+            ;;
+        *)
+            echo "The input variable is invalid."
+            exit 1
+            ;;
+    esac
+    shift
 done
 
-# Yêu cầu người dùng nhập username và password cho LiteSpeed
-ls_username="admin"
-while [ -z "$ls_username" ]; do
-    echo "Enter the username for the LiteSpeed administrator (default is admin):"
-    read ls_username
-
-    if [ -z "$ls_username" ]; then
-        ls_username="admin"
-    fi
-done
-ls_password=""
-while [ -z "$ls_password" ] || [ ${#ls_password} -lt 6 ]; do
-    echo "Enter password for the LiteSpeed administrator:"
-    read ls_password
-
-    if [ -z "$ls_password" ]; then
-        echo "[ERROR] Sorry, password must be at least 6 charactors!"
-    elif [ ${#ls_password} -lt 6 ]; then
-        echo "[ERROR] Sorry, password must be at least 6 charactors!"
-    fi
-done
+if [[ ! " ${valid_php_values[@]} " =~ " ${php_version} " ]]; then
+    echo "The PHP version is not supported. Version supported: ${valid_php_values[@]}"
+    exit 1
+fi
 
 # Lấy tổng RAM của máy chủ (đơn vị KB)
 total_ram=$(grep MemTotal /proc/meminfo | awk '{print $2}')
@@ -65,8 +66,17 @@ max_input_vars = 10000
 max_input_time = 300
 EOT
 
+# Config OpenLiteSpeed
+sudo wget -O /usr/local/lsws/conf/templates/www.conf https://raw.githubusercontent.com/huynhnd6/openlitespeed/main/conf/templates/www.conf
+sudo wget -O /usr/local/lsws/conf/httpd_config.conf https://raw.githubusercontent.com/huynhnd6/openlitespeed/main/conf/httpd_config.conf
+sudo sed -i "s|^\( *path *\).*$|\1$SERVER_ROOT/lsphp${php_version}/bin/lsphp|" /usr/local/lsws/conf/httpd_config.conf
+# change pass admin
+ENCRYPT_PASS=`/usr/local/lsws/admin/fcgi-bin/admin_php -q /usr/local/lsws/admin/misc/htpasswd.php $ls_pass`
+echo "$ls_user:$ENCRYPT_PASS" > $/usr/local/lsws/admin/conf/htpasswd 
+
 # Thực hiện cấu hình mật khẩu quản trị viên của LiteSpeed
-echo "${ls_username}:${ls_password}" | sudo /usr/local/lsws/admin/misc/admpass.sh
+sudo /usr/local/lsws/admin/misc/admpass.sh
+
 
 # Khởi động lại OpenLiteSpeed
 sudo systemctl restart lsws
