@@ -72,7 +72,7 @@ sudo wget -O /usr/local/lsws/conf/httpd_config.conf https://raw.githubuserconten
 sudo sed -i "s|^\( *path *\).*$|\1$SERVER_ROOT/lsphp${php_version}/bin/lsphp|" /usr/local/lsws/conf/httpd_config.conf
 # change pass admin
 ENCRYPT_PASS=`/usr/local/lsws/admin/fcgi-bin/admin_php -q /usr/local/lsws/admin/misc/htpasswd.php $ls_pass`
-echo "$ls_user:$ENCRYPT_PASS" > $/usr/local/lsws/admin/conf/htpasswd 
+echo "$ls_user:$ENCRYPT_PASS" > /usr/local/lsws/admin/conf/htpasswd 
 
 # Khởi động lại OpenLiteSpeed
 sudo systemctl restart lsws
