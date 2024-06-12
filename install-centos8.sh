@@ -77,16 +77,20 @@ echo "$ls_user:$ENCRYPT_PASS" > /usr/local/lsws/admin/conf/htpasswd
 # Khởi động lại OpenLiteSpeed
 sudo systemctl restart lsws
 
+# Cập nhật các mirrorlist thành comment
+sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
+
+# Cập nhật baseurl để sử dụng vault.centos.org
+sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+
 # Cài đặt certbot
 sudo dnf install certbot -y
 
 # Cài đặt MariaDB
-wget https://r.mariadb.com/downloads/mariadb_repo_setup
-echo "26e5bf36846003c4fe455713777a4e4a613da0df3b7f74b6dad1cb901f324a84 mariadb_repo_setup" | sha256sum -c -
-chmod +x mariadb_repo_setup
-sudo ./mariadb_repo_setup --mariadb-server-version="mariadb-10.4"
+wget -O - https://r.mariadb.com/downloads/mariadb_repo_setup | sudo bash -s -- --mariadb-server-version="mariadb-10.4"
 sudo yum install MariaDB-server MariaDB-backup -y
 sudo systemctl restart mariadb
+echo -e "\nn\nn\nY\nY\nY\nY\n" | mysql_secure_installation
 
 # Cài đặt WP-CLI
 curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
