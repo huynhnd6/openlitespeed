@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/bin/bash
 
 # Hỏi người dùng chọn phiên bản PHP
 echo "Vui lòng chọn phiên bản PHP (ví dụ: 80 cho PHP 8.0, 81 cho PHP 8.1):"
