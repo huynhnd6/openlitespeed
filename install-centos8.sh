@@ -65,7 +65,7 @@ max_execution_time = 300
 max_input_vars = 10000
 max_input_time = 300
 EOT
-
+sudo ln -s /usr/local/lsws/lsphp${php_version}/bin/php /usr/bin/php
 # Config OpenLiteSpeed
 sudo wget -O /usr/local/lsws/conf/templates/www.conf https://raw.githubusercontent.com/huynhnd6/openlitespeed/main/conf/templates/www.conf
 sudo wget -O /usr/local/lsws/conf/httpd_config.conf https://raw.githubusercontent.com/huynhnd6/openlitespeed/main/conf/httpd_config.conf
