@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # Hỏi người dùng chọn phiên bản PHP
 php_version=""
@@ -13,30 +13,35 @@ done
 
 # Hỏi người dùng nhập tổng RAM của máy chủ (MB)
 echo "Vui lòng nhập tổng RAM của máy chủ (MB):"
-read total_ram
+total_ram=""
+while [ -z "$total_ram" ]; do
+    echo "Vui lòng nhập tổng RAM của máy chủ (MB):"
+    read total_ram
 
-# Kiểm tra xem người dùng có nhập giá trị không
-if [ -z "$total_ram" ]; then
-    echo "Bạn chưa nhập tổng RAM của máy chủ. Kết thúc script."
-    exit 1
-fi
+    if [ -z "$total_ram" ]; then
+        echo "Bạn chưa nhập tổng RAM của máy chủ. Vui lòng nhập lại."
+    fi
+done
 
 # Yêu cầu người dùng nhập username và password cho LiteSpeed
-echo "Nhập username cho quản trị viên của LiteSpeed:"
-read ls_username
-echo "Nhập password cho quản trị viên của LiteSpeed:"
-read -s ls_password
+ls_username=""
+while [ -z "$ls_username" ]; do
+    echo "Nhập username cho quản trị viên của LiteSpeed:"
+    read ls_username
 
-# Kiểm tra xem người dùng có nhập giá trị không
-if [ -z "$ls_username" ]; then
-    echo "Bạn chưa nhập username cho LiteSpeed. Kết thúc script."
-    exit 1
-fi
-if [ -z "$ls_password" ]; then
-    echo "Bạn chưa nhập ls_password cho LiteSpeed. Kết thúc script."
-    exit 1
-fi
+    if [ -z "$ls_username" ]; then
+        echo "Bạn chưa nhập username cho quản trị viên của LiteSpeed. Vui lòng nhập lại."
+    fi
+done
+ls_password=""
+while [ -z "$ls_password" ]; do
+    echo "Nhập password cho quản trị viên của LiteSpeed:"
+    read ls_password
 
+    if [ -z "$ls_password" ]; then
+        echo "Bạn chưa nhập password cho quản trị viên của LiteSpeed. Vui lòng nhập lại."
+    fi
+done
 
 # Tính toán memory_limit bằng 70% của tổng RAM
 memory_limit=$(echo "$total_ram * 0.7" | bc)
