@@ -12,13 +12,13 @@ while [ -z "$php_version" ]; do
 done
 
 # Yêu cầu người dùng nhập username và password cho LiteSpeed
-ls_username=""
+ls_username="admin"
 while [ -z "$ls_username" ]; do
-    echo "Enter the username for the LiteSpeed administrator:"
+    echo "Enter the username for the LiteSpeed administrator (default is admin):"
     read ls_username
 
     if [ -z "$ls_username" ]; then
-        echo "You haven't entered the username for the LiteSpeed administrator. Please enter again."
+        ls_username="admin"
     fi
 done
 ls_password=""
