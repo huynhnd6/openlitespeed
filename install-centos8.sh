@@ -74,10 +74,6 @@ sudo sed -i "s|^\( *path *\).*$|\1$SERVER_ROOT/lsphp${php_version}/bin/lsphp|" /
 ENCRYPT_PASS=`/usr/local/lsws/admin/fcgi-bin/admin_php -q /usr/local/lsws/admin/misc/htpasswd.php $ls_pass`
 echo "$ls_user:$ENCRYPT_PASS" > $/usr/local/lsws/admin/conf/htpasswd 
 
-# Thực hiện cấu hình mật khẩu quản trị viên của LiteSpeed
-sudo /usr/local/lsws/admin/misc/admpass.sh
-
-
 # Khởi động lại OpenLiteSpeed
 sudo systemctl restart lsws
 
