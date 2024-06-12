@@ -33,12 +33,14 @@ while [ -z "$ls_username" ]; do
     fi
 done
 ls_password=""
-while [ -z "$ls_password" ]; do
-    echo "Nhập password cho quản trị viên của LiteSpeed:"
-    read ls_password
+while [ -z "$ls_password" ] || [ ${#ls_password} -lt 6 ]; do
+    echo "Nhập mật khẩu cho quản trị viên của LiteSpeed (tối thiểu 6 ký tự):"
+    read -s ls_password
 
     if [ -z "$ls_password" ]; then
-        echo "Bạn chưa nhập password cho quản trị viên của LiteSpeed. Vui lòng nhập lại."
+        echo "Bạn chưa nhập mật khẩu cho quản trị viên của LiteSpeed. Vui lòng nhập lại."
+    elif [ ${#ls_password} -lt 6 ]; then
+        echo "Mật khẩu phải có ít nhất 6 ký tự. Vui lòng nhập lại."
     fi
 done
 
