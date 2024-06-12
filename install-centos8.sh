@@ -3,50 +3,41 @@
 # Hỏi người dùng chọn phiên bản PHP
 php_version=""
 while [ -z "$php_version" ]; do
-    echo "Vui lòng chọn phiên bản PHP (ví dụ: 80 cho PHP 8.0, 81 cho PHP 8.1):"
+    echo "Please choose the PHP version (for example: 80 for PHP 8.0, 81 for PHP 8.1):"
     read php_version
 
     if [ -z "$php_version" ]; then
-        echo "Bạn chưa nhập phiên bản PHP. Vui lòng nhập lại."
-    fi
-done
-
-# Hỏi người dùng nhập tổng RAM của máy chủ (MB)
-total_ram=""
-while [ -z "$total_ram" ]; do
-    echo "Vui lòng nhập tổng RAM của máy chủ (MB):"
-    read total_ram
-
-    if [ -z "$total_ram" ]; then
-        echo "Bạn chưa nhập tổng RAM của máy chủ. Vui lòng nhập lại."
+        echo "You haven't entered the PHP version. Please enter again."
     fi
 done
 
 # Yêu cầu người dùng nhập username và password cho LiteSpeed
 ls_username=""
 while [ -z "$ls_username" ]; do
-    echo "Nhập username cho quản trị viên của LiteSpeed:"
+    echo "Enter the username for the LiteSpeed administrator:"
     read ls_username
 
     if [ -z "$ls_username" ]; then
-        echo "Bạn chưa nhập username cho quản trị viên của LiteSpeed. Vui lòng nhập lại."
+        echo "You haven't entered the username for the LiteSpeed administrator. Please enter again."
     fi
 done
 ls_password=""
 while [ -z "$ls_password" ] || [ ${#ls_password} -lt 6 ]; do
-    echo "Nhập mật khẩu cho quản trị viên của LiteSpeed (tối thiểu 6 ký tự):"
-    read -s ls_password
+    echo "Enter password for the LiteSpeed administrator:"
+    read ls_password
 
     if [ -z "$ls_password" ]; then
-        echo "Bạn chưa nhập mật khẩu cho quản trị viên của LiteSpeed. Vui lòng nhập lại."
+        echo "[ERROR] Sorry, password must be at least 6 charactors!"
     elif [ ${#ls_password} -lt 6 ]; then
-        echo "Mật khẩu phải có ít nhất 6 ký tự. Vui lòng nhập lại."
+        echo "[ERROR] Sorry, password must be at least 6 charactors!"
     fi
 done
 
+# Lấy tổng RAM của máy chủ (đơn vị KB)
+total_ram=$(grep MemTotal /proc/meminfo | awk '{print $2}')
 # Tính toán memory_limit bằng 70% của tổng RAM
-memory_limit=$(echo "$total_ram * 0.7" | bc)
-memory_limit="${memory_limit%.*}M" # Định dạng thành số nguyên và thêm "M"
+memory_limit=$((total_ram * 7 / 10))
+memory_limit="${memory_limit}K" # Định dạng thành KB
 
 # Cập nhật các mirrorlist thành comment
 sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
@@ -101,4 +92,4 @@ sudo firewall-cmd --add-service={http,https} --permanent
 sudo firewall-cmd --add-port={8088/tcp,7080/tcp} --permanent
 sudo firewall-cmd --reload
 
-echo "Cấu hình hoàn tất với PHP ${php_version}, certbot, MariaDB, WP-CLI và mật khẩu quản trị viên của LiteSpeed đã được thay đổi."
+echo "Installation complete!"
