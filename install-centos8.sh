@@ -1,14 +1,15 @@
 #!/bin/bash
 
 # Hỏi người dùng chọn phiên bản PHP
-echo "Vui lòng chọn phiên bản PHP (ví dụ: 80 cho PHP 8.0, 81 cho PHP 8.1):"
-read php_version
+php_version=""
+while [ -z "$php_version" ]; do
+    echo "Vui lòng chọn phiên bản PHP (ví dụ: 80 cho PHP 8.0, 81 cho PHP 8.1):"
+    read php_version
 
-# Kiểm tra xem người dùng có nhập giá trị không
-if [ -z "$php_version" ]; then
-    echo "Bạn chưa nhập phiên bản PHP. Kết thúc script."
-    exit 1
-fi
+    if [ -z "$php_version" ]; then
+        echo "Bạn chưa nhập phiên bản PHP. Vui lòng nhập lại."
+    fi
+done
 
 # Hỏi người dùng nhập tổng RAM của máy chủ (MB)
 echo "Vui lòng nhập tổng RAM của máy chủ (MB):"
