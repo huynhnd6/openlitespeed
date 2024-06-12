@@ -12,7 +12,6 @@ while [ -z "$php_version" ]; do
 done
 
 # Hỏi người dùng nhập tổng RAM của máy chủ (MB)
-echo "Vui lòng nhập tổng RAM của máy chủ (MB):"
 total_ram=""
 while [ -z "$total_ram" ]; do
     echo "Vui lòng nhập tổng RAM của máy chủ (MB):"
