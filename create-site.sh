@@ -51,7 +51,7 @@ mysql -e "FLUSH PRIVILEGES;"
 # Tạo thư mục và cài đặt WordPress
 SITE_DIR="/usr/local/lsws/${SITE_NAME}"
 mkdir -p $SITE_DIR
-/usr/local/bin/wp core download --path=$SITE_DIR
+/usr/local/bin/wp core download --path=$SITE_DIR --version="6.5.4"
 /usr/local/bin/wp config create --path=$SITE_DIR --dbhost=localhost --dbname=${DB_NAME} --dbuser=${DB_NAME} --dbpass=${MYSQL_PASS} --force --skip-check
 /usr/local/bin/wp config set FS_METHOD direct --path=$SITE_DIR
 /usr/local/bin/wp core install --path=$SITE_DIR --url=https://${SITE_NAME} --title="${SITE_NAME}" --admin_user=webadmin --admin_password=${WP_ADMIN_PASS} --admin_email=support@${SITE_NAME}
