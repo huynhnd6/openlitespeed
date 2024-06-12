@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/bin/bash
 
 # Hỏi người dùng chọn phiên bản PHP
 php_version=""
